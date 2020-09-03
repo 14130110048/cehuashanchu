@@ -1,0 +1,174 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>title</title>
+    <!--<link rel="stylesheet" type="text/css" href="../css/api.css"/>-->
+    <style>
+    	body {
+        	background-color: #f2f2f2;
+	    }
+	    h1 {
+	        text-align: center;
+	        font-size: 1.4em;
+	        padding-top: 2em;
+	        padding-bottom: 2em;
+	    }
+	    .wrapper {
+	        position: relative;
+	        height: 100px;
+	        overflow: hidden;
+			border-bottom: 1px solid #f2f2f2	        
+	    }
+	    .container {
+	        position: absolute;
+	        left: 0;
+	        width: 100%;
+	        height: 100px;
+	        line-height: 100px;
+	        padding-left: 5%;
+	        box-sizing: border-box;
+	        background-color: #fff;
+	        font-size: 1.2em;
+	        font-weight: 200;
+	        
+	    }
+	    .delete {
+	        float: right;
+		    width: 80px;
+		    top: 0;
+		    right: 0;
+		    line-height: 100px;
+		    background-color: #f00;
+		    color: #fff;
+		    text-align: center;
+		    height: 100px;
+	    }
+	    .delete i.iconfont {
+	        font-size: 1em;
+	        padding-right: 5px;
+	    }
+	    p {
+	        text-align: center;
+	        padding-top: 4em;
+	        padding-bottom: 6em;
+	        color: #555;
+	        font-size: 1em;
+	    }
+        .add {
+            width: 100px;
+            height: 50px;
+            text-align: center;
+            line-height: 50px;
+            background: #fff;
+            margin-bottom: 50px;
+        }
+        @keyframes noheight {
+            0% {
+                height: 100px;
+                opacity: 1;
+            }
+
+            100% {
+                height: 0px;
+                opacity: 0;
+            }
+        }
+
+        .noheight {
+            animation: noheight .5s linear 0s forwards;
+        }
+    </style>
+</head>
+<body>
+	<h1>移动WEB模拟原声APP滑动删除</h1>
+    <div class="add" onclick="addCart()">添加一个</div>
+    <div class="container-wrapper" id="container-wrapper">
+        <div class="wrapper">
+            <div class="container" ontouchstart="return touchstartF(event,this);" ontouchmove="return touchmoveF(event,this);">左右滑动1</div>
+            <div class="delete" onclick="return toDelete(event,this);">
+                <i class="iconfont icon-shanchu"></i>
+                删除
+            </div>
+        </div>
+
+        <div class="wrapper">
+            <div class="container" ontouchstart="return touchstartF(event,this);" ontouchmove="return touchmoveF(event,this);">左右滑动2</div>
+            <div class="delete" onclick="return toDelete(event,this);">
+                <i class="iconfont icon-shanchu"></i>
+                删除
+            </div>
+        </div>
+    </div>  
+</body>
+<!--<script type="text/javascript" src="../script/api.js"></script>-->
+<script type="text/javascript">
+
+	function touchstartF(event) {
+	    x = event.changedTouches[0].pageX;
+	    y = event.changedTouches[0].pageY;
+	    swipeX = true;
+	    swipeY = true;
+	};
+	function touchmoveF(event, e) {
+	    X = event.changedTouches[0].pageX;
+	    Y = event.changedTouches[0].pageY;
+	    // 左右滑动
+	    if (swipeX && Math.abs(X - x) - Math.abs(Y - y) > 0) {
+	        // 阻止事件冒泡
+	        event.stopPropagation();
+	        if (X - x > 10) {
+	            event.preventDefault();
+	            e.style.WebkitTransform = "translateX(" + 0 + "px)";
+	            e.style.transition = "-webkit-transform 300ms ease-in-out";
+	        }
+	        if (x - X > 10) {
+	            event.preventDefault();
+	            e.style.WebkitTransform = "translateX(" + -80 + "px)";
+	            e.style.transition = "-webkit-transform 300ms ease-in-out";
+	        }
+	        swipeY = false;
+	    }
+	    // 上下滑动
+	    if (swipeY && Math.abs(X - x) - Math.abs(Y - y) < 0) {
+	        swipeX = false;
+	    }
+	};
+		
+	    
+	function toDelete(event, e) {
+	    var deleteL = document.querySelectorAll('.delete');
+	    var wrapper = document.querySelectorAll('.wrapper');
+	    for (var i = 0; i < wrapper.length; i++) {
+	        wrapper[i].style.transition = 'height 500ms';
+	        wrapper[i].style.webkitTransition = 'height 500ms';
+	        wrapper[i].style.overflow = 'hidden';
+	    }
+	    var deleteLB = e;
+
+	    var down = deleteLB.parentNode;
+	    if (down.clientHeight == '100') {
+	        // deleteLB.parentNode.style.height = '0';
+	        deleteLB.parentNode.classList.add('noheight');
+	        setTimeout(function () {
+	            down.remove();
+	        }, 700);
+	    }
+
+	}
+		
+    function addCart() {
+        var html = '<div class="wrapper">'
+                    + '<div class="container" ontouchstart="return touchstartF(event,this);" ontouchmove="return touchmoveF(event,this);">左右滑动</div>'
+                    +    '<div class="delete"onclick="return toDelete(event,this);">'
+                    +        '<i class="iconfont icon-shanchu"></i> 删除'      
+                    +    '</div>'
+                    + '</div>'
+        document.getElementById("container-wrapper").insertAdjacentHTML('beforeEnd', html)
+    }
+		
+	
+</script>
+</html>
